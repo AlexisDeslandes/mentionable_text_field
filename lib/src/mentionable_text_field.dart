@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mentionable_text_field/src/constants.dart';
+import 'package:mentionable_text_field/src/list_extension.dart';
 import 'package:mentionable_text_field/src/string_extension.dart';
 
 part 'mention_text_editing_controller.dart';
@@ -14,7 +15,7 @@ part 'mentionable.dart';
 /// The type of callback when mentionables candidate
 /// have changed.
 typedef MentionablesChangedCallback = void Function(
-  List<Mentionable> mentionableUsers,
+  List<Mentionable> mentionables,
 );
 
 /// A Widget built on top of [TextField] to add mentions feature.
