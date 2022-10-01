@@ -1,45 +1,75 @@
-import 'dart:collection';
-
-import 'package:flutter/material.dart';
-import 'package:mentionable_text_field/src/string_extension.dart';
+part of 'mentionable_text_field.dart';
 
 ///
-/// A [TextEditingController] that displays the mentions with a specific color using username.
-/// True mention tags are stored in [_mentions] and will be used on [trueContent] call.
+/// A [TextEditingController] that displays the mentions
+/// with a specific style using [mentionStyle].
+/// Mentions are stored in controller
+/// as an unique character [escapingMentionCharacter].
+/// Internally, [value] contains only [escapingMentionCharacter],
+/// but the user will see mentions.
+/// To get the real content of the text field
+/// use [buildMentionedValue].
 ///
 class MentionTextEditingController extends TextEditingController {
-  ///
+  /// default constructor.
   MentionTextEditingController({
-    required this.usernameMentionRegexp,
+    required MentionablesChangedCallback onMentionablesChanged,
     this.mentionStyle = const TextStyle(fontWeight: FontWeight.bold),
-    this.escapingMentionCharacter = '∞',
-  }) : _mentions = [];
+    this.escapingMentionCharacter = Constants.escapingMentionCharacter,
+  })  : _onMentionablesChanged = onMentionablesChanged,
+        _mentionables = [];
 
+  /// Character that is excluded from keyboard
+  /// to replace the mentions (not visible to users).
   final String escapingMentionCharacter;
-  final RegExp usernameMentionRegexp;
+
+  /// [TextStyle] applied to mentionables in Text Field.
   final TextStyle mentionStyle;
-  final List<String> _mentions;
+  final List<Mentionable> _mentionables;
+  final MentionablesChangedCallback _onMentionablesChanged;
 
-  Queue<String> _mentionQueue() => Queue<String>.from(_mentions);
+  String? _getMentionCandidate(String value) {
+    const mentionCharacter = Constants.mentionCharacter;
+    final indexCursor = selection.base.offset;
+    var indexAt =
+        value.substring(0, indexCursor).reverse.indexOf(mentionCharacter);
+    if (indexAt != -1) {
+      if (value.length == 1) return mentionCharacter;
+      indexAt = indexCursor - indexAt;
+      if (indexAt != -1 && indexAt >= 0 && indexAt <= indexCursor) {
+        return value.substring(indexAt - 1, indexCursor);
+      }
+    }
+    return null;
+  }
 
-  void addMention(String candidate, String mention) {
+  Queue<Mentionable> _mentionQueue() => Queue<Mentionable>.from(_mentionables);
+
+  void _addMention(String candidate, Mentionable user) {
     final indexSelection = selection.base.offset;
     final textPart = text.substring(0, indexSelection);
     final indexInsertion = textPart.countChar(escapingMentionCharacter);
-    _mentions.insert(indexInsertion, mention);
+    _mentionables.insert(indexInsertion, user);
     text = '${text.replaceAll(candidate, escapingMentionCharacter)} ';
     selection =
         TextSelection.collapsed(offset: indexSelection - candidate.length + 2);
   }
 
-  /// Text with mention tag.
-  /// To call to get the content we want to send to server eg.
-  String get trueContent {
-    final mentionQueue = _mentionQueue();
-    return text.replaceAllMapped(
-      escapingMentionCharacter,
-      (_) => mentionQueue.removeFirst(),
-    );
+  void _onFieldChanged(
+    String value,
+    List<Mentionable> userList,
+  ) {
+    final candidate = _getMentionCandidate(value);
+    var list = <Mentionable>[];
+    if (candidate != null) {
+      final isMentioningRegexp = RegExp(r'^@[a-zA-Z ]*$');
+      final mention =
+          isMentioningRegexp.stringMatch(candidate)?.substring(1).toLowerCase();
+      if (mention != null) {
+        list = userList.where((element) => element.match(mention)).toList();
+      }
+    }
+    _onMentionablesChanged(list);
   }
 
   @override
@@ -56,16 +86,34 @@ class MentionTextEditingController extends TextEditingController {
       children: res.map((e) {
         if (e == escapingMentionCharacter) {
           final mention = mentionQueue.removeFirst();
-          final username = usernameMentionRegexp.stringMatch(mention)!;
           return WidgetSpan(
             child: Text(
-              username,
+              mention._mentionLabel,
               style: mentionStyle,
             ),
           );
         }
         return TextSpan(text: e, style: style);
       }).toList(),
+    );
+  }
+
+  /// Add the mention to this controller.
+  /// [_onMentionablesChanged] is called with empty list,
+  /// yet there are no candidates anymore.
+  void pickMentionable(Mentionable mentionable) {
+    final candidate = _getMentionCandidate(text)!;
+    _addMention(candidate, mentionable);
+    _onMentionablesChanged([]);
+  }
+
+  /// Get the real value of the field with the mentions transformed
+  /// thanks to [Mentionable.buildMention].
+  String buildMentionedValue() {
+    final mentionQueue = _mentionQueue();
+    return text.replaceAllMapped(
+      escapingMentionCharacter,
+      (_) => mentionQueue.removeFirst().buildMention(),
     );
   }
 }
