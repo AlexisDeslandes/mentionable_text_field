@@ -10,11 +10,11 @@ class ValueChangedMock<T> extends Mock {
 }
 
 class MyMentionable extends Mentionable {
-  const MyMentionable(this.label);
+  const MyMentionable(this.mentionLabel);
 
   @override
-  final String label;
+  final String mentionLabel;
 
   @override
-  String buildMention() => '<mention>$label</mention>';
+  String buildMention() => '<mention>$mentionLabel</mention>';
 }

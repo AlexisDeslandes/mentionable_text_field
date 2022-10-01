@@ -92,7 +92,11 @@ class MentionableTextField extends StatefulWidget {
     this.scrollController,
     this.autofillHints,
     this.restorationId,
-  }) : enableInteractiveSelection =
+  })  : assert(
+          escapingMentionCharacter.length == 1,
+          'escapingMentionCharacter should be a single character.',
+        ),
+        enableInteractiveSelection =
             enableInteractiveSelection ?? (!readOnly || !obscureText);
 
   /// A callback to retrieve the [TextField] controller when
@@ -102,8 +106,9 @@ class MentionableTextField extends StatefulWidget {
   /// List of possible [Mentionable] objects, eg: users.
   final List<Mentionable> mentionables;
 
-  /// The character used to replace mention
-  /// (not visible to final users on keyboard).
+  /// The character used to replace mention.
+  /// It should not be used by the user to avoid issues.
+  /// It should be a single character.
   final String escapingMentionCharacter;
 
   /// Callback that is called on each new characters typed

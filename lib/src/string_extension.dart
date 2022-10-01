@@ -5,5 +5,5 @@ extension StringExtension on String {
 
   /// Reverse the string:
   /// 'azer' => 'reza'
-  String get reverse => split('').reversed.join();
+  String get reversed => split('').reversed.join();
 }

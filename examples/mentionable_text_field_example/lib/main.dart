@@ -8,14 +8,14 @@ void main() {
 /// Example implementation of [Mentionable].
 class MyUser extends Mentionable {
   /// default constructor.
-  const MyUser(this.label);
+  const MyUser(this.mentionLabel);
 
   /// Label of user.
   @override
-  final String label;
+  final String mentionLabel;
 
   @override
-  String buildMention() => '<my-custom-tag>$label</my-custom-tag>';
+  String buildMention() => '<my-custom-tag>$mentionLabel</my-custom-tag>';
 }
 
 /// App widget that shows mentionable_text_field example implementation.
@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         final mentionable = _mentionableUsers[index];
                         return ListTile(
                           leading: const Icon(Icons.person),
-                          title: Text(mentionable.label),
+                          title: Text(mentionable.mentionLabel),
                           onTap: () => _onSelectMention(mentionable),
                         );
                       },

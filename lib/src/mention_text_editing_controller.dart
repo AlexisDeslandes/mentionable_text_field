@@ -32,7 +32,7 @@ class MentionTextEditingController extends TextEditingController {
     const mentionCharacter = Constants.mentionCharacter;
     final indexCursor = selection.base.offset;
     var indexAt =
-        value.substring(0, indexCursor).reverse.indexOf(mentionCharacter);
+        value.substring(0, indexCursor).reversed.indexOf(mentionCharacter);
     if (indexAt != -1) {
       if (value.length == 1) return mentionCharacter;
       indexAt = indexCursor - indexAt;
@@ -66,7 +66,8 @@ class MentionTextEditingController extends TextEditingController {
       final mention = isMentioningRegexp.stringMatch(candidate)?.substring(1);
       if (mention != null) {
         final perfectMatch = mentionables.firstWhereOrNull(
-          (element) => element.match(mention) && element.label == mention,
+          (element) =>
+              element.match(mention) && element.mentionLabel == mention,
         );
         if (perfectMatch != null) {
           pickMentionable(perfectMatch);
@@ -97,7 +98,7 @@ class MentionTextEditingController extends TextEditingController {
           final mention = mentionQueue.removeFirst();
           return WidgetSpan(
             child: Text(
-              mention._mentionLabel,
+              mention._fullMentionLabel,
               style: mentionStyle,
             ),
           );
