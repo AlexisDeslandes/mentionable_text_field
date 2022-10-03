@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   mentionable_text_field:
     path: ../../
+  rxdart: ^0.27.5
 
 dev_dependencies:
   flutter_lints: ^2.0.1
