@@ -1,9 +1,6 @@
 # mentionable_text_field
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![License: MIT][license_badge]][license_link]
-
-A flutter plugin to create text field that has a mentionable feature.
+A flutter plugin to create customizable text field that has a mentionable feature.
 
 <p align="center">
   <a href="https://zupimages.net/viewer.php?id=22/40/1xum.gif"><img src="https://zupimages.net/up/22/40/1xum.gif" alt="" /></a>
