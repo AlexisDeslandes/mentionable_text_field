@@ -1,10 +1,11 @@
 name: mentionable_text_field
 description: A flutter text field that has a mention feature
-version: 1.0.0+1
-publish_to: none
+version: 0.0.1
+homepage: https://github.com/AlexisDeslandes/mentionable_text_field
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=1.17.0"
 
 dependencies:
   flutter:
@@ -16,3 +17,12 @@ dev_dependencies:
   mocktail: ^0.3.0
   very_good_analysis: ^3.0.1
   
+flutter:
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:

@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
     const title = 'Mentionable text field Demo';
     return const MaterialApp(
       title: title,
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(title: title),
     );
   }
