@@ -93,15 +93,17 @@ class MentionTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    final res = text.split(
-      RegExp('(?=$escapingMentionCharacter)|(?<=$escapingMentionCharacter)'),
-    );
+    final regexp =
+        RegExp('(?=$escapingMentionCharacter)|(?<=$escapingMentionCharacter)');
+    // split result on "Hello ∞ where is ∞?" is: [Hello,∞, where is ,∞,?]
+    final res = text.split(regexp);
     final mentionQueue = _mentionQueue();
     return TextSpan(
       style: style,
       children: res.map((e) {
         if (e == escapingMentionCharacter) {
           final mention = mentionQueue.removeFirst();
+          // Mandatory WidgetSpan so that it takes the appropriate char number.
           return WidgetSpan(
             child: Text(
               mention._fullMentionLabel,

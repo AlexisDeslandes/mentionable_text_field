@@ -1,6 +1,6 @@
 name: mentionable_text_field
-description: A flutter text field that has a mention feature
-version: 0.0.1
+description: A flutter plugin to create customizable text field that has a mentionable feature. The way matching users are displayed and picked is decorrelated from the Widget itself, so that you will be able to chose the way you will do.
+version: 0.0.2
 homepage: https://github.com/AlexisDeslandes/mentionable_text_field
 
 environment:

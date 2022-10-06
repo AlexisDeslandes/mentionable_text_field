@@ -10,7 +10,7 @@ A flutter plugin to create customizable text field that has a mentionable featur
 In your pubspec.yaml
 ```yaml
 dependencies:
-  mentionable_text_field: ^0.0.1
+  mentionable_text_field: ^0.0.2
 ```
 ```dart
 import 'package:mentionable_text_field/mentionable_text_field.dart';
@@ -94,6 +94,7 @@ There are other options:\
 | `List<Mentionable> mentionables` | List of possible `Mentionable` objects, eg: users.|
 | `String escapingMentionCharacter` | The character used to replace mention. It should not be used by the user to avoid issues. It should be a single character.|
 | `MentionablesChangedCallback onMentionablesChanged` | Callback that is called on each new characters typed in `TextField`. It gives the current candidates to mention feature.|
+| `TextStyle mentionStyle` | Text Style applied to mentions|
 
 ## Additional information
 
