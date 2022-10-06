@@ -2,7 +2,7 @@ part of 'mentionable_text_field.dart';
 
 ///
 /// A [TextEditingController] that displays the mentions
-/// with a specific style using [mentionStyle].
+/// with a specific style using [_mentionStyle].
 /// Mentions are stored in controller
 /// as an unique character [escapingMentionCharacter].
 /// Internally, [value] contains only [escapingMentionCharacter],
@@ -14,17 +14,22 @@ class MentionTextEditingController extends TextEditingController {
   /// default constructor.
   MentionTextEditingController({
     required MentionablesChangedCallback onMentionablesChanged,
-    this.mentionStyle = const TextStyle(fontWeight: FontWeight.bold),
     this.escapingMentionCharacter = Constants.escapingMentionCharacter,
+    TextStyle? mentionStyle,
   })  : _onMentionablesChanged = onMentionablesChanged,
-        _storedMentionables = [];
+        _storedMentionables = [],
+        _mentionStyle =
+            mentionStyle ?? const TextStyle(fontWeight: FontWeight.bold);
 
   /// Character that is excluded from keyboard
   /// to replace the mentions (not visible to users).
   final String escapingMentionCharacter;
 
   /// [TextStyle] applied to mentionables in Text Field.
-  final TextStyle mentionStyle;
+  final TextStyle _mentionStyle;
+
+  /// List of [Mentionable] present in the [TextField].
+  /// Order of elements is the same as in the [TextField].
   final List<Mentionable> _storedMentionables;
   final MentionablesChangedCallback _onMentionablesChanged;
 
@@ -88,8 +93,9 @@ class MentionTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    final escapeChar = escapingMentionCharacter;
-    final res = text.split(RegExp('(?=$escapeChar)|(?<=$escapeChar)'));
+    final res = text.split(
+      RegExp('(?=$escapingMentionCharacter)|(?<=$escapingMentionCharacter)'),
+    );
     final mentionQueue = _mentionQueue();
     return TextSpan(
       style: style,
@@ -99,7 +105,7 @@ class MentionTextEditingController extends TextEditingController {
           return WidgetSpan(
             child: Text(
               mention._fullMentionLabel,
-              style: mentionStyle,
+              style: _mentionStyle,
             ),
           );
         }

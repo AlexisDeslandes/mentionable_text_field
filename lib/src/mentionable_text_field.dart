@@ -38,6 +38,7 @@ class MentionableTextField extends StatefulWidget {
     super.key,
     required this.onMentionablesChanged,
     this.onControllerReady,
+    this.mentionStyle,
     this.expands = false,
     this.readOnly = false,
     this.toolbarOptions,
@@ -114,6 +115,9 @@ class MentionableTextField extends StatefulWidget {
   /// Callback that is called on each new characters typed
   /// in [TextField]. It gives the current candidates to mention feature.
   final MentionablesChangedCallback onMentionablesChanged;
+
+  /// [TextStyle] used to render mentions.
+  final TextStyle? mentionStyle;
 
   /// Called when the [TextField] is tapped.
   final VoidCallback? onTap;
@@ -438,6 +442,7 @@ class _MentionableTextFieldState extends State<MentionableTextField> {
       MentionTextEditingController(
     escapingMentionCharacter: widget.escapingMentionCharacter,
     onMentionablesChanged: widget.onMentionablesChanged,
+    mentionStyle: widget.mentionStyle,
   );
 
   @override
@@ -455,6 +460,7 @@ class _MentionableTextFieldState extends State<MentionableTextField> {
   void _onChanged(String value) {
     final mentionables = widget.mentionables;
     _controller._onFieldChanged(value, mentionables);
+    widget.onChanged?.call(value);
   }
 
   void _onSubmitted(_) {
